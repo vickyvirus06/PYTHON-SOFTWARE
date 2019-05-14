@@ -1,0 +1,197 @@
+ Task 
+
+VIEW ALL foreign key in view
+
+CREATE
+    ALTER
+    VIEW  tac_mbk_details1
+    AS
+    
+    SELECT auther_name,language_name,btype_name,shelf_no
+ ,borrower_code,bkcopy_code,staff_name,student_name,designation_name,department_name
+    
+    from         mbk_details 
+    inner join   ggn_auther  on mbk_details.auther_code=ggn_auther.auther_code 
+    inner join ggn_languagetype  on mbk_details.language_code= ggn_languagetype.language_code
+    inner join  mbtype_details  on mbk_details.btype_code=mbtype_details.btype_code
+   inner join  ggn_shelf on mbk_details.shelf_code=ggn_shelf.shelf_code
+  left outer join  ggn_borrower on mbk_details.bk_code=ggn_borrower.bk_code
+     left outer  join  tac_bkstock on mbk_details.bk_code=tac_bkstock.bk_code 
+   left outer join  ggn_staff  on ggn_borrower.staff_code=ggn_staff.staff_code 
+   left outer join   ggn_student on ggn_borrower.student_code=ggn_student.student_code
+   left outer join   ggn_designation on ggn_staff.designation_code=ggn_designation.designation_code
+  left outer join   ggn_department on ggn_student.department_code=ggn_department.department_code
+      
+GO
+
+ALTER VIEW [dbo].[tac_mbk_details1]
+AS
+SELECT     dbo.ggn_auther.auther_name, dbo.ggn_languagetype.language_name, dbo.mbtype_details.btype_name, dbo.ggn_shelf.shelf_no, dbo.ggn_borrower.borrower_code, 
+                      dbo.tac_bkstock.bkcopy_code, dbo.ggn_staff.staff_name, dbo.ggn_student.student_name, dbo.ggn_designation.designation_name, 
+                      dbo.ggn_department.department_name, dbo.mbk_details.bk_code, dbo.mbk_details.bk_name, dbo.mbk_details.auther_code, dbo.mbk_details.btype_code, 
+                      dbo.mbk_details.publication_year, dbo.mbk_details.shelf_code, dbo.mbk_details.language_code
+FROM         dbo.mbk_details INNER JOIN
+                      dbo.ggn_auther ON dbo.mbk_details.auther_code = dbo.ggn_auther.auther_code INNER JOIN
+                      dbo.ggn_languagetype ON dbo.mbk_details.language_code = dbo.ggn_languagetype.language_code INNER JOIN
+                      dbo.mbtype_details ON dbo.mbk_details.btype_code = dbo.mbtype_details.btype_code INNER JOIN
+                      dbo.ggn_shelf ON dbo.mbk_details.shelf_code = dbo.ggn_shelf.shelf_code LEFT OUTER JOIN
+                      dbo.ggn_borrower ON dbo.mbk_details.bk_code = dbo.ggn_borrower.bk_code LEFT OUTER JOIN
+                      dbo.tac_bkstock ON dbo.mbk_details.bk_code = dbo.tac_bkstock.bk_code LEFT OUTER JOIN
+                      dbo.ggn_staff ON dbo.ggn_borrower.staff_code = dbo.ggn_staff.staff_code LEFT OUTER JOIN
+                      dbo.ggn_student ON dbo.ggn_borrower.student_code = dbo.ggn_student.student_code LEFT OUTER JOIN
+                      dbo.ggn_designation ON dbo.ggn_staff.designation_code = dbo.ggn_designation.designation_code LEFT OUTER JOIN
+                      dbo.ggn_department ON dbo.ggn_student.department_code = dbo.ggn_department.department_code
+
+GO
+
+
+      
+ SP_mbk_detailsmsg for Displaying msg
+
+
+ALTER PROCEDURE [dbo].[SP_mbk_detailsmsg]
+	(
+	              
+	@bk_name                 varchar(50),
+	@auther_name             varchar(20),
+	@btype_name               varchar(20),
+	@publication_year         int,
+	@shelf_no                int,
+	@language_name            varchar(20)
+	
+	)
+AS
+BEGIN
+declare @bk_code as numeric(10)
+declare @auther_code as numeric(10)
+declare @btype_code  as numeric(10)
+declare @shelf_code as numeric(10)
+declare @language_code as numeric(10)
+
+IF NOT exists(select auther_name  from ggn_auther where auther_name=@auther_name)			
+		BEGIN		
+		 	insert into ggn_auther(auther_name) values(UPPER(@auther_name))		 		  
+	    END    
+	
+      select @auther_code=auther_code  from ggn_auther where auther_name=@auther_name
+	
+	 if NOT EXISTS(select btype_name from mbtype_details where btype_name=@btype_name)
+  
+      BEGIN
+      insert into mbtype_details(btype_name)values(UPPER(@btype_name))
+      END
+    
+       select @btype_code=btype_code from mbtype_details where btype_name=@btype_name
+    
+	  if NOT EXISTS(select shelf_no from ggn_shelf where shelf_no=@shelf_no)
+  
+      BEGIN
+      insert into ggn_shelf(shelf_no)values(UPPER(@shelf_no))
+     END
+    
+     select @shelf_code=shelf_code from ggn_shelf where shelf_no=@shelf_no
+     
+     
+     if NOT EXISTS(select language_name from ggn_languagetype where language_name=@language_name)
+  
+      BEGIN
+      insert into ggn_languagetype(language_name)values(UPPER(@language_name))
+     END
+    select @language_code=language_code from ggn_languagetype where language_name=@language_name
+ 
+    IF NOT EXISTS(SELECT bk_name FROM mbk_details  WHERE bk_name = @bk_name)
+    
+    
+    
+  BEGIN
+  
+      PRINT 'Record doesn''t Exists'
+      
+      insert into mbk_details(bk_name,auther_code,btype_code,publication_year,shelf_code,language_code)
+	 Values(UPPER(@bk_name),@auther_code,@btype_code,@publication_year,@shelf_code,@language_code)
+   END
+ELSE
+    BEGIN
+       PRINT 'Record  Exists'
+    END
+
+	
+--select @bk_code = SCOPE_IDENTITY()  
+END
+
+ --return @bk_code
+--
+--
+exec SP_mbk_detailsmsg 'basic of sql1 ','sudhaker l','rdbms',2019,2,'english'
+select * from tac_mbk_details1
+
+SP_mbk_details_name 
+
+
+SP_mbk_details_name
+	(
+	@bk_name                 varchar(50),
+	@btype_name                varchar(20),
+	@publication_year         int,
+	@shelf_no                int,
+	@language_name             varchar,	
+	@auther_name                varchar(20)
+	)
+AS
+BEGIN
+
+declare @auther_code as numeric(10)
+declare @btype_code  as numeric(10)
+declare @shelf_code as numeric(10)
+declare @language_code as numeric(10)
+
+
+	IF NOT exists(select auther_name  from ggn_auther where auther_name=@auther_name)			
+		BEGIN		
+		 	insert into ggn_auther(auther_name) values(UPPER(@auther_name))		 		  
+	    END    
+	
+      select @auther_code=auther_code  from ggn_auther where auther_name=@auther_name
+	
+	  if NOT EXISTS(select btype_name from mbtype_details where btype_name=@btype_name)
+  
+      BEGIN
+      insert into mbtype_details(btype_name)values(@btype_name)
+      END
+    
+       select @btype_code=btype_code from mbtype_details where btype_name=@btype_name
+    
+	  if NOT EXISTS(select shelf_no from ggn_shelf where shelf_no=@shelf_no)
+  
+      BEGIN
+      insert into ggn_shelf(shelf_no)values(@shelf_no)
+     END
+    
+     select @shelf_code=shelf_code from ggn_shelf where shelf_no=@shelf_no
+     
+     
+     if NOT EXISTS(select language_name from ggn_languagetype where language_name=@language_name)
+  
+      BEGIN
+      insert into ggn_languagetype(language_name)values(@language_name)
+     END
+    
+     select @language_code=language_code from ggn_languagetype where language_name=@language_name
+    
+	  insert into mbk_details(bk_name,auther_code,btype_code,publication_year,shelf_code,language_code)
+	 Values(UPPER(@bk_name),@auther_code,@btype_code,@publication_year,@shelf_code,@language_code)
+END
+
+
+
+
+     
+      
+      
+      
+      
+      
+      
+      
+    
+ 
