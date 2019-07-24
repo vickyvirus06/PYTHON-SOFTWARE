@@ -9,7 +9,7 @@ import time
 # globally declare wb and sheet variable
 
 # opening the existing excel file
-wb = load_workbook('/home/vickyvirus/VICKYVIRUS PROGRAMS/shivdatt2018.xlsx')
+wb = load_workbook('/home/vickyvirus/VICKYVIRUS PROGRAMS/vickyvirus.xlsx')
 
 # create the sheet object
 sheet = wb.active
@@ -117,7 +117,7 @@ def insert():
         """
         sheet.cell(row=current_row + 1, column=4).value = paid_unpaid.get()
                 # save the file
-        wb.save('/home/vickyvirus/VICKYVIRUS PROGRAMS/shivdatt2018.xlsx')
+        wb.save('/home/vickyvirus/VICKYVIRUS PROGRAMS/vickyvirus.xlsx')
 
         # set focus on the sr box
         name.focus_set()
@@ -133,7 +133,7 @@ root = Tk()
     # set the background colour of GUI window
 
     # set the title of GUI window
-root.title("SHIVDATT MITRA MANDAL")
+root.title("VICKYVIRUS EXCEL ENTRY")
 root.configure(bg="powder blue")
 
 
@@ -154,7 +154,7 @@ f2.pack(side=RIGHT)
 #===============Time=======================
 localtime=time.asctime(time.localtime(time.time()))
 #=========================Info=================================
-h = Label(Tops,font=('arial',50,'bold'), text="SHIVDATT MITRA MANDAL", fg="steel blue",bg = "powder blue",bd=5,anchor='w').grid(row = 0,column = 0)
+h = Label(Tops,font=('arial',50,'bold'), text="VICKYVIRUS EXCEL ENTRY", fg="steel blue",bg = "powder blue",bd=5,anchor='w').grid(row = 0,column = 0)
 lbinfo = Label(Tops,font=('arial',20,'bold'),text = localtime,fg = "steel blue",bd = 10,anchor = 'w').grid(row = 1,column = 0)
 #========================================entry=================
 
@@ -240,7 +240,7 @@ def change():
                             if amount_new1 != "":
                                 sheet.cell(row=i,column=3).value = amount_new1
                             
-                            wb.save('/home/vickyvirus/VICKYVIRUS PROGRAMS/shivdatt2018.xlsx')
+                            wb.save('/home/vickyvirus/VICKYVIRUS PROGRAMS/vickyvirus.xlsx')
                             clearnew()
                             
                             
