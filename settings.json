@@ -1,0 +1,29 @@
+
+{
+    "editor.tokenColorCustomizations":{
+        "terminal.foreground": "#00FF00",
+        "terminal.background": "#000000",
+        
+        "terminal.ansiRed": "#ff0000"
+    },
+    "workbench.colorCustomizations": {
+        "terminal.foreground": "#00FF00",
+        "terminal.ansiBrightGreen": "#fbff00",
+        "terminal.background": "#000000"
+    },
+    "workbench.startupEditor": "newUntitledFile",
+    "editor.matchBrackets": false,
+    "editor.selectionHighlight": false,
+    "editor.copyWithSyntaxHighlighting": false,
+    "editor.highlightActiveIndentGuide": false,
+    "editor.occurrencesHighlight": false,
+    "window.menuBarVisibility": "toggle",
+    "editor.fontSize": 15,
+    "code-runner.clearPreviousOutput": true,
+    "code-runner.runInTerminal": true,
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.showExecutionMessage": false,
+    "terminal.integrated.fontSize": 15,
+    
+}
+
